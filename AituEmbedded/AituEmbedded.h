@@ -1,10 +1,3 @@
-//
-//  AituEmbedded.h
-//  AituEmbedded
-//
-//  Created by Artem Mylnikov on 28.06.2021.
-//
-
 #import <Foundation/Foundation.h>
 
 //! Project version number for AituEmbedded.
