@@ -14,6 +14,9 @@
 		2D2CC9CF2689D41B002DB463 /* AituEmbedded.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D2CC9CD2689D41B002DB463 /* AituEmbedded.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2D2CC9D22689D41B002DB463 /* AituEmbedded.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2CC9CB2689D41B002DB463 /* AituEmbedded.framework */; };
 		2D2CC9D32689D41B002DB463 /* AituEmbedded.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2CC9CB2689D41B002DB463 /* AituEmbedded.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2D2CC9E3268B51C3002DB463 /* WebBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2CC9E0268B51C3002DB463 /* WebBridge.swift */; };
+		2D2CC9E7268B8B2C002DB463 /* AituWebBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2CC9E6268B8B2C002DB463 /* AituWebBridge.swift */; };
+		2D2CC9EB268B8D2D002DB463 /* AituWebBridge+ContactBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2CC9EA268B8D2D002DB463 /* AituWebBridge+ContactBook.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +53,9 @@
 		2D2CC9CB2689D41B002DB463 /* AituEmbedded.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AituEmbedded.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D2CC9CD2689D41B002DB463 /* AituEmbedded.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AituEmbedded.h; sourceTree = "<group>"; };
 		2D2CC9CE2689D41B002DB463 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2D2CC9E0268B51C3002DB463 /* WebBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebBridge.swift; sourceTree = "<group>"; };
+		2D2CC9E6268B8B2C002DB463 /* AituWebBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AituWebBridge.swift; sourceTree = "<group>"; };
+		2D2CC9EA268B8D2D002DB463 /* AituWebBridge+ContactBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AituWebBridge+ContactBook.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +110,9 @@
 		2D2CC9CC2689D41B002DB463 /* AituEmbedded */ = {
 			isa = PBXGroup;
 			children = (
+				2D2CC9E6268B8B2C002DB463 /* AituWebBridge.swift */,
+				2D2CC9EA268B8D2D002DB463 /* AituWebBridge+ContactBook.swift */,
+				2D2CC9E0268B51C3002DB463 /* WebBridge.swift */,
 				2D2CC9CD2689D41B002DB463 /* AituEmbedded.h */,
 				2D2CC9CE2689D41B002DB463 /* Info.plist */,
 			);
@@ -175,6 +184,7 @@
 					};
 					2D2CC9CA2689D41B002DB463 = {
 						CreatedOnToolsVersion = 12.1;
+						LastSwiftMigration = 1210;
 					};
 				};
 			};
@@ -230,6 +240,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D2CC9E7268B8B2C002DB463 /* AituWebBridge.swift in Sources */,
+				2D2CC9EB268B8D2D002DB463 /* AituWebBridge+ContactBook.swift in Sources */,
+				2D2CC9E3268B51C3002DB463 /* WebBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,6 +395,7 @@
 		2D0C186A2689CA4600B5F11D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -400,6 +414,7 @@
 		2D0C186B2689CA4600B5F11D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -418,6 +433,7 @@
 		2D2CC9D52689D41B002DB463 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -434,6 +450,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.btsd.aitu.embedded;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -444,6 +461,7 @@
 		2D2CC9D62689D41B002DB463 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
