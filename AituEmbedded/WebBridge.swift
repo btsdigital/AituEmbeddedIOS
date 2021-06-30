@@ -2,16 +2,20 @@ import WebKit
 
 protocol WebBridgeController {
     var method: String { get }
-    func receive(body: Any, from url: URL?, within webView: WKWebView)
+    func receive(body: Any, from url: URL?, sender: WebBridgeSender)
+}
+
+protocol WebBridgeSender {
+    func send(reply: String)
 }
 
 final class WebBridge {
     private let receivers: [MessageReceiver]
 
-    init(_ webView: WKWebView, controllers: [WebBridgeController]) {
+    init(_ webView: WKWebView, controllers: [WebBridgeController], sender: WebBridgeSender) {
         receivers = controllers.map({ contoller in
             let receiver = MessageReceiver(receive: { body, url in
-                contoller.receive(body: body, from: url, within: webView)
+                contoller.receive(body: body, from: url, sender: sender)
             })
             webView.configuration.userContentController.add(receiver, name: contoller.method)
             return receiver
@@ -32,8 +36,8 @@ private final class MessageReceiver: NSObject, WKScriptMessageHandler {
     }
 }
 
-extension WKWebView {
-    func evaluateAituBridgeJavaScript(_ js: String) {
+extension WKWebView: WebBridgeSender {
+    func send(reply js: String) {
         DispatchQueue.main.async {
             let payloadPlace = "###payload###"
             let template = """

@@ -61,7 +61,7 @@ public final class AituWebBridge {
                 }
             })
         })
-        bridge = WebBridge(webView, controllers: [getToken, openSettings, getContacts])
+        bridge = WebBridge(webView, controllers: [getToken, openSettings, getContacts], sender: webView)
     }
 }
 
@@ -76,16 +76,16 @@ extension AituWebBridge {
             self.handler = handler
         }
 
-        func receive(body: Any, from url: URL?, within webView: WKWebView) {
+        func receive(body: Any, from url: URL?, sender: WebBridgeSender) {
             guard let body = body as? [String: Any], let reqID = coder.decodeID(body) else {
                 let reason = "can't parse request id or body type not [String: Any]"
-                webView.send(reply: coder.encode(.failure(.unexpected(reason))), requestID: "")
+                sender.send(reply: coder.encode(.failure(.unexpected(reason)), requestID: ""))
                 return
             }
             handler({ result in
                 switch result {
-                case .success(let x): webView.send(reply: coder.encode(.success(x)), requestID: reqID)
-                case .failure(let error): webView.send(reply: coder.encode(.failure(error)), requestID: reqID)
+                case .success(let x): sender.send(reply: coder.encode(.success(x), requestID: reqID))
+                case .failure(let error): sender.send(reply: coder.encode(.failure(error), requestID: reqID))
                 }
             })
         }
@@ -101,13 +101,20 @@ extension AituWebBridge {
             }
         }
 
-        func encode(_ result: Result) -> String {
+        func encode(_ result: Result, requestID: String) -> String {
+            let reply: String
             switch result {
             case .success(let payload):
-                return encode(payload)
+                reply = encode(payload)
             case .failure(let error):
-                return encode(error)
+                reply = encode(error)
             }
+            return """
+            {
+                requestId: "\(requestID)",
+                \(reply)
+            }
+            """
         }
 
         func encode(_ payload: Payload) -> String {
@@ -160,17 +167,5 @@ extension AituWebBridge {
                 """
             }
         }
-    }
-}
-
-extension WKWebView {
-    fileprivate func send(reply: String, requestID: String) {
-        let js = """
-        {
-            requestId: "\(requestID)",
-            \(reply)
-        }
-        """
-        evaluateAituBridgeJavaScript(js)
     }
 }
