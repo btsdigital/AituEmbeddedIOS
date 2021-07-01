@@ -16,7 +16,8 @@
 		2D2CC9D32689D41B002DB463 /* AituEmbedded.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2D2CC9CB2689D41B002DB463 /* AituEmbedded.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2D2CC9E3268B51C3002DB463 /* WebBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2CC9E0268B51C3002DB463 /* WebBridge.swift */; };
 		2D2CC9E7268B8B2C002DB463 /* AituWebBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2CC9E6268B8B2C002DB463 /* AituWebBridge.swift */; };
-		2D2CC9EB268B8D2D002DB463 /* AituWebBridge+ContactBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2CC9EA268B8D2D002DB463 /* AituWebBridge+ContactBook.swift */; };
+		2D2CC9EB268B8D2D002DB463 /* ContactBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2CC9EA268B8D2D002DB463 /* ContactBook.swift */; };
+		2DE7608B268E12C8005C0E91 /* AituWebBridge+Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE7608A268E12C8005C0E91 /* AituWebBridge+Controller.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,7 +56,8 @@
 		2D2CC9CE2689D41B002DB463 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2D2CC9E0268B51C3002DB463 /* WebBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebBridge.swift; sourceTree = "<group>"; };
 		2D2CC9E6268B8B2C002DB463 /* AituWebBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AituWebBridge.swift; sourceTree = "<group>"; };
-		2D2CC9EA268B8D2D002DB463 /* AituWebBridge+ContactBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AituWebBridge+ContactBook.swift"; sourceTree = "<group>"; };
+		2D2CC9EA268B8D2D002DB463 /* ContactBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactBook.swift; sourceTree = "<group>"; };
+		2DE7608A268E12C8005C0E91 /* AituWebBridge+Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AituWebBridge+Controller.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,8 +113,9 @@
 			isa = PBXGroup;
 			children = (
 				2D2CC9E6268B8B2C002DB463 /* AituWebBridge.swift */,
-				2D2CC9EA268B8D2D002DB463 /* AituWebBridge+ContactBook.swift */,
+				2DE7608A268E12C8005C0E91 /* AituWebBridge+Controller.swift */,
 				2D2CC9E0268B51C3002DB463 /* WebBridge.swift */,
+				2D2CC9EA268B8D2D002DB463 /* ContactBook.swift */,
 				2D2CC9CD2689D41B002DB463 /* AituEmbedded.h */,
 				2D2CC9CE2689D41B002DB463 /* Info.plist */,
 			);
@@ -241,7 +244,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D2CC9E7268B8B2C002DB463 /* AituWebBridge.swift in Sources */,
-				2D2CC9EB268B8D2D002DB463 /* AituWebBridge+ContactBook.swift in Sources */,
+				2D2CC9EB268B8D2D002DB463 /* ContactBook.swift in Sources */,
+				2DE7608B268E12C8005C0E91 /* AituWebBridge+Controller.swift in Sources */,
 				2D2CC9E3268B51C3002DB463 /* WebBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -5,28 +5,30 @@ public protocol AituWebBridgeDelegate {
 }
 
 public final class AituWebBridge {
-    private enum Result {
+    enum Result {
         case success(Payload)
         case failure(Error)
     }
 
-    private enum Payload {
+    enum Payload {
         case token(String)
         case empty
         case contacts([ContactBook.Contact])
     }
 
-    private enum Error: Swift.Error {
+    enum Error: Swift.Error {
         case permissionDenied
         case unexpected(String)
     }
 
     public var delegate: AituWebBridgeDelegate?
-    private let webView: WKWebView
-    private var bridge: WebBridge?
+    private let registrator: WebBridgeRegistrator
+    private let sender: WebBridgeSender
+    private var receivers: [MessageReceiver] = []
 
-    public init(webView: WKWebView = WKWebView()) {
-        self.webView = webView
+    public init(registrator: WebBridgeRegistrator, sender: WebBridgeSender) {
+        self.registrator = registrator
+        self.sender = sender
     }
 
     public func start() {
@@ -61,114 +63,14 @@ public final class AituWebBridge {
                 }
             })
         })
-        let registrator = WebBridge.Registrator(register: { [webView] receiver, name in
-            webView.configuration.userContentController.add(receiver, name: name)
+
+        let controllers = [getToken, openSettings, getContacts]
+        receivers = controllers.map({ contoller -> MessageReceiver in
+            let receiver = MessageReceiver(receive: { [sender] body, url in
+                contoller.receive(body: body, from: url, sender: sender)
+            })
+            registrator.register(receiver, method: contoller.method)
+            return receiver
         })
-        bridge = WebBridge(controllers: [getToken, openSettings, getContacts], registrator: registrator, sender: webView)
-    }
-}
-
-extension AituWebBridge {
-    private struct Controller: WebBridgeController {
-        let method: String
-        private let handler: (@escaping (Result) -> Void) -> Void
-        private let coder = Coder()
-
-        init(method: String, handler: @escaping (@escaping (Result) -> Void) -> Void) {
-            self.method = method
-            self.handler = handler
-        }
-
-        func receive(body: Any, from url: URL?, sender: WebBridgeSender) {
-            guard let body = body as? [String: Any], let reqID = coder.decodeID(body) else {
-                let reason = "can't parse request id or body type not [String: Any]"
-                sender.send(reply: coder.encode(.failure(.unexpected(reason)), requestID: ""))
-                return
-            }
-            handler({ result in
-                switch result {
-                case .success(let x): sender.send(reply: coder.encode(.success(x), requestID: reqID))
-                case .failure(let error): sender.send(reply: coder.encode(.failure(error), requestID: reqID))
-                }
-            })
-        }
-    }
-
-    private struct Coder {
-        func decodeID(_ dictionary: [String: Any]) -> String? {
-            let key = "requestId"
-            if let id = dictionary[key] as? Int {
-                return String(id)
-            } else {
-                return dictionary[key] as? String
-            }
-        }
-
-        func encode(_ result: Result, requestID: String) -> String {
-            let reply: String
-            switch result {
-            case .success(let payload):
-                reply = encode(payload)
-            case .failure(let error):
-                reply = encode(error)
-            }
-            return """
-            {
-                requestId: "\(requestID)",
-                \(reply)
-            }
-            """
-        }
-
-        func encode(_ payload: Payload) -> String {
-            switch payload {
-            case .token(let token):
-                return """
-                data: {
-                    "authToken": "\(token)"
-                }
-                """
-            case .empty:
-                return "data: true"
-            case .contacts(let contacts):
-                return """
-                "data": {
-                    "contacts": \(encode(contacts))
-                }
-                """
-            }
-        }
-
-        func encode(_ contacts: [ContactBook.Contact]) -> String {
-            let xs = contacts.map({ contact in
-                """
-                {
-                    "first_name": "\(contact.firstName)",
-                    "last_name": "\(contact.lastName)",
-                    "phone": "\(contact.phone)"
-                }
-                """
-            })
-            return "[\(xs.joined(separator: ","))]"
-        }
-
-        func encode(_ error: Error) -> String {
-            switch error {
-            case .permissionDenied:
-                return """
-                "error": {
-                    "code": "PERMISSION_DENIED",
-                    "msg": ""
-                }
-                """
-            case .unexpected(let description):
-                return """
-                "error": {
-                    "code": "UNEXPECTED",
-                    "msg": "\(description)"
-                }
-                """
-            }
-        }
     }
 }
