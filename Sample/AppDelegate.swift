@@ -25,7 +25,7 @@ final class AituViewController: UIViewController, AituWebBridgeDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        bridge = AituWebBridge(registrator: webView, sender: AituWebBridgeFormatter(sender: webView.send))
+        bridge = AituWebBridge(webView)
         bridge?.delegate = self
         bridge?.start()
 

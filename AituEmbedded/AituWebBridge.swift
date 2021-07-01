@@ -26,7 +26,7 @@ public final class AituWebBridge {
     private let sender: WebBridgeSender
     private var receivers: [MessageReceiver] = []
 
-    public init(registrator: WebBridgeRegistrator, sender: WebBridgeSender) {
+    init(registrator: WebBridgeRegistrator, sender: WebBridgeSender) {
         self.registrator = registrator
         self.sender = sender
     }
@@ -72,5 +72,11 @@ public final class AituWebBridge {
             registrator.register(receiver, method: contoller.method)
             return receiver
         })
+    }
+}
+
+extension AituWebBridge {
+    public convenience init(_ webView: WKWebView) {
+        self.init(registrator: webView, sender: AituWebBridgeFormatter(sender: webView.send))
     }
 }
