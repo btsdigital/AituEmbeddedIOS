@@ -61,7 +61,10 @@ public final class AituWebBridge {
                 }
             })
         })
-        bridge = WebBridge(webView, controllers: [getToken, openSettings, getContacts], sender: webView)
+        let registrator = WebBridge.Registrator(register: { [webView] receiver, name in
+            webView.configuration.userContentController.add(receiver, name: name)
+        })
+        bridge = WebBridge(controllers: [getToken, openSettings, getContacts], registrator: registrator, sender: webView)
     }
 }
 

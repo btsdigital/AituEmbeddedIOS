@@ -10,14 +10,25 @@ protocol WebBridgeSender {
 }
 
 final class WebBridge {
+    struct Registrator {
+        private let _register: (WKScriptMessageHandler, String) -> Void
+
+        init(register: @escaping (WKScriptMessageHandler, String) -> Void) {
+            _register = register
+        }
+
+        func register(_ receiver: WKScriptMessageHandler, method: String) {
+            _register(receiver, method)
+        }
+    }
     private let receivers: [MessageReceiver]
 
-    init(_ webView: WKWebView, controllers: [WebBridgeController], sender: WebBridgeSender) {
+    init(controllers: [WebBridgeController], registrator: Registrator, sender: WebBridgeSender) {
         receivers = controllers.map({ contoller in
             let receiver = MessageReceiver(receive: { body, url in
                 contoller.receive(body: body, from: url, sender: sender)
             })
-            webView.configuration.userContentController.add(receiver, name: contoller.method)
+            registrator.register(receiver, method: contoller.method)
             return receiver
         })
     }
