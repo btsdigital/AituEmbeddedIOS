@@ -26,7 +26,7 @@ public protocol WebBridgeRegistrator {
     func register(_ receiver: WKScriptMessageHandler, method: String)
 }
 
-public struct AituWebBridgeFormatter: WebBridgeSender {
+public struct AituWebBridgeAdapter: WebBridgeSender {
     private let sender: (String) -> Void
 
     public init(sender: @escaping (String) -> Void) {

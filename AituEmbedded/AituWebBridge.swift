@@ -77,6 +77,6 @@ public final class AituWebBridge {
 
 extension AituWebBridge {
     public convenience init(_ webView: WKWebView) {
-        self.init(registrator: webView, sender: AituWebBridgeFormatter(sender: webView.send))
+        self.init(registrator: webView, sender: AituWebBridgeAdapter(sender: webView.send))
     }
 }
