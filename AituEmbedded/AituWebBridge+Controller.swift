@@ -17,7 +17,7 @@ extension AituWebBridge {
                 sender.send(reply: coder.encode(.failure(.unexpected(reason)), requestID: ""))
                 return
             }
-            handler({ result in
+            handler({ [coder] result in
                 switch result {
                 case .success(let x): sender.send(reply: coder.encode(.success(x), requestID: reqID))
                 case .failure(let error): sender.send(reply: coder.encode(.failure(error), requestID: reqID))
