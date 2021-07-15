@@ -24,14 +24,16 @@ public final class AituWebBridge {
     public var delegate: AituWebBridgeDelegate?
     private let registrator: WebBridgeRegistrator
     private let sender: WebBridgeSender
+    private let _start: () -> Void
     private var receivers: [MessageReceiver] = []
 
-    init(registrator: WebBridgeRegistrator, sender: WebBridgeSender) {
+    init(registrator: WebBridgeRegistrator, sender: WebBridgeSender, start: @escaping () -> Void) {
         self.registrator = registrator
         self.sender = sender
+        self._start = start
     }
 
-    public func start() {
+    public func configure() {
         let getToken = Controller(method: "getKundelikAuthToken", handler: { [weak self] answer in
             if let delegate = self?.delegate {
                 delegate.getToken(completed: { result in
@@ -77,6 +79,13 @@ public final class AituWebBridge {
 
 extension AituWebBridge {
     public convenience init(_ webView: WKWebView) {
-        self.init(registrator: webView, sender: AituWebBridgeAdapter(sender: webView.send))
+        self.init(registrator: webView, sender: AituWebBridgeAdapter(sender: webView.send), start: {
+            let requst = URLRequest(url: URL(string: "https://kundelik.aitu.io/")!)
+            webView.load(requst)
+        })
+    }
+
+    public func start() {
+        _start()
     }
 }

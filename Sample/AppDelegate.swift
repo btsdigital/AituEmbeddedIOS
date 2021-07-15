@@ -27,14 +27,13 @@ final class AituViewController: UIViewController, AituWebBridgeDelegate {
         super.viewDidLoad()
         bridge = AituWebBridge(webView)
         bridge?.delegate = self
-        bridge?.start()
+        bridge?.configure()
 
         webView.frame = view.bounds
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(webView)
 
-        let requst = URLRequest(url: URL(string: "https://astanajs.kz/test-kundelik")!)
-        webView.load(requst)
+        bridge?.start()
     }
 
     func getToken(completed: @escaping (Result<String, Error>) -> Void) {
