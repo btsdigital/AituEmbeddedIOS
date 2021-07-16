@@ -39,5 +39,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>NSContactsUsageDescription</key>
+    <string>Contacts Usage Description</string>
 </dict>
 </plist>
