@@ -1,7 +1,28 @@
 import WebKit
 
 public protocol AituWebBridgeDelegate {
-    func getToken(completed: @escaping (Result<String, Error>) -> Void)
+    func getToken(completed: @escaping (Result<String, AituWebBridge.Error>) -> Void)
+    func getUserInfo(completed: @escaping (Result<User, AituWebBridge.Error>) -> Void)
+    func notify(about event: Event)
+}
+
+public enum Event {
+    case newMessage
+}
+
+public struct User {
+    public enum Role {
+        case parent
+        case teacher
+        case student(classID: String)
+    }
+    public let id: String
+    public let role: Role
+
+    public init(id: String, role: Role) {
+        self.id = id
+        self.role = role
+    }
 }
 
 public final class AituWebBridge {
@@ -16,7 +37,7 @@ public final class AituWebBridge {
         case contacts([ContactBook.Contact])
     }
 
-    enum Error: Swift.Error {
+    public enum Error: Swift.Error {
         case permissionDenied
         case unexpected(String)
     }
@@ -35,25 +56,25 @@ public final class AituWebBridge {
 
     public func configure() {
         let getToken = Controller(method: "getKundelikAuthToken", handler: { [weak self] answer in
-            if let delegate = self?.delegate {
-                delegate.getToken(completed: { result in
-                    switch result {
-                    case .success(let token): answer(.success(.token(token)))
-                    case .failure(let error): answer(.failure(.unexpected(error.localizedDescription)))
-                    }
-                })
-            } else {
+            guard let delegate = self?.delegate else {
                 answer(.failure(.unexpected("delegate is nil")))
+                return
             }
+            delegate.getToken(completed: { result in
+                switch result {
+                case .success(let token): answer(.success(.token(token)))
+                case .failure(let error): answer(.failure(error))
+                }
+            })
         })
         let openSettings = Controller(method: "openSettings", handler: { answer in
-            if let url = URL(string: UIApplication.openSettingsURLString) {
-                DispatchQueue.main.async {
-                    UIApplication.shared.open(url)
-                    answer(.success(.empty))
-                }
-            } else {
+            guard let url = URL(string: UIApplication.openSettingsURLString) else {
                 answer(.failure(.unexpected("can't create url for open setting")))
+                return
+            }
+            DispatchQueue.main.async {
+                UIApplication.shared.open(url)
+                answer(.success(.empty))
             }
         })
         let getContacts = Controller(method: "getContacts", handler: { answer in
