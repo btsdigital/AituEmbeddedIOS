@@ -78,9 +78,9 @@ public final class AituWebBridge {
 }
 
 extension AituWebBridge {
-    public convenience init(_ webView: WKWebView) {
+    public convenience init(_ webView: WKWebView, startURL: URL = URL(string: "https://kundelik.aitu.io/")!) {
         self.init(registrator: webView, sender: AituWebBridgeAdapter(sender: webView.send), start: {
-            let requst = URLRequest(url: URL(string: "https://kundelik.aitu.io/")!)
+            let requst = URLRequest(url: startURL)
             webView.load(requst)
         })
     }

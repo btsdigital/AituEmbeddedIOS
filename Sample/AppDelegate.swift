@@ -25,7 +25,13 @@ final class AituViewController: UIViewController, AituWebBridgeDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        bridge = AituWebBridge(webView)
+
+        // для теста элементов
+        bridge = AituWebBridge(webView, startURL: URL(string: "https://astanajs.kz/test-kundelik")!)
+
+        // для интеграции в кунделик используй дефолт
+//        bridge = AituWebBridge(webView)
+
         bridge?.delegate = self
         bridge?.configure()
 
