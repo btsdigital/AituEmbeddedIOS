@@ -3,10 +3,10 @@ import Foundation
 extension AituWebBridge {
     struct Controller: WebBridgeController {
         let method: String
-        private let handler: (@escaping (Result) -> Void) -> Void
+        private let handler: ([String: Any], @escaping (Result) -> Void) -> Void
         private let coder = Coder()
 
-        init(method: String, handler: @escaping (@escaping (Result) -> Void) -> Void) {
+        init(method: String, handler: @escaping ([String: Any], @escaping (Result) -> Void) -> Void) {
             self.method = method
             self.handler = handler
         }
@@ -17,7 +17,7 @@ extension AituWebBridge {
                 sender.send(reply: coder.encode(.failure(.unexpected(reason)), requestID: ""))
                 return
             }
-            handler({ [coder] result in
+            handler(body, { [coder] result in
                 switch result {
                 case .success(let x): sender.send(reply: coder.encode(.success(x), requestID: reqID))
                 case .failure(let error): sender.send(reply: coder.encode(.failure(error), requestID: reqID))
@@ -37,22 +37,30 @@ extension AituWebBridge {
         }
 
         func encode(_ result: Result, requestID: String) -> String {
-            return """
-            {
-                requestId: "\(requestID)",
-                \(encode(result))
+            if let encoded = encode(result) {
+                return """
+                {
+                    requestId: "\(requestID)",
+                    \(encoded)
+                }
+                """
+            } else {
+                return """
+                {
+                    requestId: "\(requestID)"
+                }
+                """
             }
-            """
         }
 
-        private func encode(_ result: Result) -> String {
+        private func encode(_ result: Result) -> String? {
             switch result {
             case .success(let payload): return encode(payload)
             case .failure(let error): return encode(error)
             }
         }
 
-        private func encode(_ payload: Payload) -> String {
+        private func encode(_ payload: Payload) -> String? {
             switch payload {
             case .token(let token):
                 return """
@@ -60,14 +68,40 @@ extension AituWebBridge {
                     "authToken": "\(token)"
                 }
                 """
+            case .bool(let bool):
+                return "data: \(bool)"
             case .empty:
-                return "data: true"
+                return nil
             case .contacts(let contacts):
                 return """
                 "data": {
                     "contacts": \(encode(contacts))
                 }
                 """
+            case .user(let user):
+                var r = """
+                "data": {
+                    "kundelikUserId": "\(user.id)",
+                """
+                switch user.role {
+                case .teacher:
+                    r += """
+                    "role": "uchitel"
+                }
+                """
+                case .parent:
+                    r += """
+                    "role": "roditel"
+                }
+                """
+                case .student(let classID):
+                    r += """
+                    "role": "uchenik",
+                    "classId": "\(classID)"
+                }
+                """
+                }
+                return r
             }
         }
 

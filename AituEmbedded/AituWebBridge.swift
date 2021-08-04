@@ -6,8 +6,8 @@ public protocol AituWebBridgeDelegate {
     func notify(about event: Event)
 }
 
-public enum Event {
-    case newMessage
+public enum Event: String {
+    case newMessage = "new_message"
 }
 
 public struct User {
@@ -32,9 +32,11 @@ public final class AituWebBridge {
     }
 
     enum Payload {
-        case token(String)
         case empty
+        case token(String)
+        case bool(Bool)
         case contacts([ContactBook.Contact])
+        case user(User)
     }
 
     public enum Error: Swift.Error {
@@ -55,7 +57,7 @@ public final class AituWebBridge {
     }
 
     public func configure() {
-        let getToken = Controller(method: "getKundelikAuthToken", handler: { [weak self] answer in
+        let getToken = Controller(method: "getKundelikAuthToken", handler: { [weak self] _, answer in
             guard let delegate = self?.delegate else {
                 answer(.failure(.unexpected("delegate is nil")))
                 return
@@ -67,17 +69,17 @@ public final class AituWebBridge {
                 }
             })
         })
-        let openSettings = Controller(method: "openSettings", handler: { answer in
+        let openSettings = Controller(method: "openSettings", handler: { _, answer in
             guard let url = URL(string: UIApplication.openSettingsURLString) else {
                 answer(.failure(.unexpected("can't create url for open setting")))
                 return
             }
             DispatchQueue.main.async {
                 UIApplication.shared.open(url)
-                answer(.success(.empty))
+                answer(.success(.bool(true)))
             }
         })
-        let getContacts = Controller(method: "getContacts", handler: { answer in
+        let getContacts = Controller(method: "getContacts", handler: { _, answer in
             let book = ContactBook()
             book.requestAccess(handler: { result in
                 switch result {
@@ -86,8 +88,34 @@ public final class AituWebBridge {
                 }
             })
         })
+        let newEvent = Controller(method: "showNewMessengerEvent", handler: { [weak self] body, answer in
+            guard let delegate = self?.delegate else {
+                answer(.failure(.unexpected("delegate is nil")))
+                return
+            }
+            guard let x = body["data"] as? [String: String],
+                  let type = x["eventType"],
+                  let event = Event(rawValue: type) else {
+                answer(.failure(.unexpected("invalid event type")))
+                return
+            }
+            delegate.notify(about: event)
+            answer(.success(.empty))
+        })
+        let getUser = Controller(method: "getKundelikUserInfo", handler: { [weak self] _, answer in
+            guard let delegate = self?.delegate else {
+                answer(.failure(.unexpected("delegate is nil")))
+                return
+            }
+            delegate.getUserInfo(completed: { result in
+                switch result {
+                case .success(let user): answer(.success(.user(user)))
+                case .failure(let error): answer(.failure(error))
+                }
+            })
+        })
 
-        let controllers = [getToken, openSettings, getContacts]
+        let controllers = [getToken, openSettings, getContacts, newEvent, getUser]
         receivers = controllers.map({ contoller -> MessageReceiver in
             let receiver = MessageReceiver(receive: { [sender] body, url in
                 contoller.receive(body: body, from: url, sender: sender)
