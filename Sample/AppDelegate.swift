@@ -16,7 +16,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-final class AituViewController: UIViewController, AituWebBridgeDelegate {
+final class AituViewController: UIViewController {
     enum DemoError: Error {
         case something
     }
@@ -25,7 +25,13 @@ final class AituViewController: UIViewController, AituWebBridgeDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        bridge = AituWebBridge(webView)
+
+        // для теста элементов
+        bridge = AituWebBridge(webView, startURL: URL(string: "https://astanajs.kz/test-kundelik")!)
+
+        // для интеграции в кунделик используй дефолт
+//        bridge = AituWebBridge(webView)
+
         bridge?.delegate = self
         bridge?.configure()
 
@@ -35,11 +41,20 @@ final class AituViewController: UIViewController, AituWebBridgeDelegate {
 
         bridge?.start()
     }
+}
 
-    func getToken(completed: @escaping (Result<String, Error>) -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
-//            completed(.failure(DemoError.something))
-            completed(.success("kz123"))
-        })
+extension AituViewController: AituWebBridgeDelegate {
+    func getToken(completed: @escaping (Result<String, AituWebBridge.Error>) -> Void) {
+//        completed(.failure(.unexpected("something")))
+        completed(.success("kz123"))
+    }
+
+    func getUserInfo(completed: @escaping (Result<User, AituWebBridge.Error>) -> Void) {
+        let user = User(id: "1", role: .student(classID: "class-1"))
+        completed(.success(user))
+    }
+
+    func notify(about event: Event) {
+        print(event)
     }
 }
