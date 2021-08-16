@@ -86,17 +86,17 @@ extension AituWebBridge {
                 switch user.role {
                 case .teacher:
                     r += """
-                    "role": "uchitel"
+                    "role": "EduStaff"
                 }
                 """
                 case .parent:
                     r += """
-                    "role": "roditel"
+                    "role": "EduParent"
                 }
                 """
                 case .student(let classID):
                     r += """
-                    "role": "uchenik",
+                    "role": "EduStudent",
                     "classId": "\(classID)"
                 }
                 """
