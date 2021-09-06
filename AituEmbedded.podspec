@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name             = 'AituEmbedded'
-  spec.version          = '1.1.1'
+  spec.version          = '1.1.2'
   spec.summary          = 'Aitu inside Kundelik'
   spec.homepage         = 'https://github.com/btsdigital/AituEmbeddedIOS'
   spec.license      = { :type => "MIT", :file => "LICENSE.md" }
