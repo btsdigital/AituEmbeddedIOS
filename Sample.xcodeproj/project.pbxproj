@@ -18,6 +18,7 @@
 		2D2CC9E7268B8B2C002DB463 /* AituWebBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2CC9E6268B8B2C002DB463 /* AituWebBridge.swift */; };
 		2D2CC9EB268B8D2D002DB463 /* ContactBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2CC9EA268B8D2D002DB463 /* ContactBook.swift */; };
 		2DE7608B268E12C8005C0E91 /* AituWebBridge+Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE7608A268E12C8005C0E91 /* AituWebBridge+Controller.swift */; };
+		DE58167626E62A5700B4B837 /* ContactsVersionHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE58167526E62A5700B4B837 /* ContactsVersionHolder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		2D2CC9E6268B8B2C002DB463 /* AituWebBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AituWebBridge.swift; sourceTree = "<group>"; };
 		2D2CC9EA268B8D2D002DB463 /* ContactBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactBook.swift; sourceTree = "<group>"; };
 		2DE7608A268E12C8005C0E91 /* AituWebBridge+Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AituWebBridge+Controller.swift"; sourceTree = "<group>"; };
+		DE58167526E62A5700B4B837 /* ContactsVersionHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsVersionHolder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 				2D2CC9EA268B8D2D002DB463 /* ContactBook.swift */,
 				2D2CC9CD2689D41B002DB463 /* AituEmbedded.h */,
 				2D2CC9CE2689D41B002DB463 /* Info.plist */,
+				DE58167526E62A5700B4B837 /* ContactsVersionHolder.swift */,
 			);
 			path = AituEmbedded;
 			sourceTree = "<group>";
@@ -246,6 +249,7 @@
 				2D2CC9E7268B8B2C002DB463 /* AituWebBridge.swift in Sources */,
 				2D2CC9EB268B8D2D002DB463 /* ContactBook.swift in Sources */,
 				2DE7608B268E12C8005C0E91 /* AituWebBridge+Controller.swift in Sources */,
+				DE58167626E62A5700B4B837 /* ContactsVersionHolder.swift in Sources */,
 				2D2CC9E3268B51C3002DB463 /* WebBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

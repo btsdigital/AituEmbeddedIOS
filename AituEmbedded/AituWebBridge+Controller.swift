@@ -102,6 +102,10 @@ extension AituWebBridge {
                 """
                 }
                 return r
+            case .contactsVersion(let version):
+                return """
+                "data": "\(version)"
+                """
             }
         }
 

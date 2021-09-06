@@ -37,6 +37,7 @@ public final class AituWebBridge {
         case bool(Bool)
         case contacts([ContactBook.Contact])
         case user(User)
+        case contactsVersion(String)
     }
 
     public enum Error: Swift.Error {
@@ -48,6 +49,7 @@ public final class AituWebBridge {
     private let registrator: WebBridgeRegistrator
     private let sender: WebBridgeSender
     private let _start: () -> Void
+    private let contactsVersionHolder = ContactsVersionHolder()
     private var receivers: [MessageReceiver] = []
 
     init(registrator: WebBridgeRegistrator, sender: WebBridgeSender, start: @escaping () -> Void) {
@@ -88,6 +90,13 @@ public final class AituWebBridge {
                 }
             })
         })
+        let getContactsVersion = Controller(method: "getContactsVersion", handler: { [weak self] _, answer in
+            guard let self = self else {
+                answer(.failure(.unexpected("AituWebBridge is killed")))
+                return
+            }
+            answer(.success(.contactsVersion(self.contactsVersionHolder.contactsVersion)))
+        })
         let newEvent = Controller(method: "showNewMessengerEvent", handler: { [weak self] body, answer in
             guard let delegate = self?.delegate else {
                 answer(.failure(.unexpected("delegate is nil")))
@@ -115,7 +124,7 @@ public final class AituWebBridge {
             })
         })
 
-        let controllers = [getToken, openSettings, getContacts, newEvent, getUser]
+        let controllers = [getToken, openSettings, getContacts, newEvent, getUser, getContactsVersion]
         receivers = controllers.map({ contoller -> MessageReceiver in
             let receiver = MessageReceiver(receive: { [sender] body, url in
                 contoller.receive(body: body, from: url, sender: sender)
