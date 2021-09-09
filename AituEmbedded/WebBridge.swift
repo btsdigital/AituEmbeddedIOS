@@ -48,7 +48,11 @@ public struct AituWebBridgeAdapter: WebBridgeSender {
 extension WKWebView: WebBridgeSender, WebBridgeRegistrator {
     public func send(reply: String) {
         DispatchQueue.main.async {
-            self.evaluateJavaScript(reply, completionHandler: nil)
+            self.evaluateJavaScript(reply) { obj, error in
+                if let error = error {
+                    print("AituWebBridge: error:\(String(describing: error))")
+                }
+            }
         }
     }
 
